@@ -1,4 +1,4 @@
-const jwt = require('../helpers/jwt');
+const jwt = require('../helper/jwt');
 
 module.exports = (req, res, next) => {
   let decoded = jwt.verify(req.headers.token);

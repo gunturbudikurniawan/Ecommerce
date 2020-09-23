@@ -53,4 +53,77 @@ module.exports = {
       });
     });
   },
+  updateGender: (id, gender) => {
+    let query = `UPDATE  user  SET  gender = '${gender}' WHERE id = ${id}`;
+    return new Promise((resolve, reject) => {
+      connection.query(query, (error, result) => {
+        if (error) {
+          reject(new Error(error));
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+  updateTTL: (id, ttl) => {
+    let query = `UPDATE  user  SET  ttl = '${ttl}' WHERE id = ${id}`;
+    return new Promise((resolve, reject) => {
+      connection.query(query, (error, result) => {
+        if (error) {
+          reject(new Error(error));
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+  updatePhone: (id, phone) => {
+    let query = `UPDATE  user  SET  phone = '${phone}' WHERE id = ${id}`;
+    return new Promise((resolve, reject) => {
+      connection.query(query, (error, result) => {
+        if (error) {
+          reject(new Error(error));
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+  updateLink_wa: (id, link_wa) => {
+    let query = `UPDATE  user  SET  link_wa = '${link_wa}' WHERE id = ${id}`;
+    return new Promise((resolve, reject) => {
+      connection.query(query, (error, result) => {
+        if (error) {
+          reject(new Error(error));
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+  deleteUser: (id) => {
+    return new Promise((resolve, reject) => {
+      const query = `DELETE FROM user WHERE id = '${id}'`;
+      connection.query(query, (error, result) => {
+        if (error) {
+          reject(new Error(error));
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+  addUserPhoto: (id, photo) => {
+    return new Promise((resolve, reject) => {
+      const query = `INSERT INTO user (photo, id)
+                        VALUES ('${photo}', '${id}')`;
+      connection.query(query, (error, result) => {
+        if (error) {
+          reject(new Error(error));
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
 };

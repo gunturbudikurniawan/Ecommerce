@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs');
-const salt = bcrypt.genSaltSync(8);
+const salt = bcrypt.genSaltSync(10);
 
 module.exports = {
   compare: function (pass, hash) {

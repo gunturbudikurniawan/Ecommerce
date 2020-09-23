@@ -10,7 +10,8 @@ exports.validateUser = [
     .bail()
     .isLength({ min: 5 })
     .withMessage('Minimum 3 characters required!')
-    .bail(),
+    .matches(/\d/)
+    .withMessage('must contain a number'),
   check('email')
     .trim()
     .normalizeEmail()
@@ -18,6 +19,25 @@ exports.validateUser = [
     .isEmpty()
     .withMessage('Invalid email address!')
     .bail(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty())
+      return res.status(422).json({ errors: errors.array() });
+    next();
+  },
+];
+exports.updatePhone = [
+  check('phone')
+    .trim()
+    .escape()
+    .not()
+    .isEmpty()
+    .withMessage('Phone can not be empty!')
+    .bail()
+    .isLength({ max: 12 })
+    .withMessage('Maximum 12 characters required!')
+    .isNumeric()
+    .withMessage('must contain a number'),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty())
