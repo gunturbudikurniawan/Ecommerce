@@ -113,10 +113,90 @@ module.exports = {
       });
     });
   },
-  addUserPhoto: (id, photo) => {
+  uploadUser: (filename, id) => {
+    let query = `UPDATE user SET photo = '${filename}' WHERE id = ${id}`;
     return new Promise((resolve, reject) => {
-      const query = `INSERT INTO user (photo, id)
-                        VALUES ('${photo}', '${id}')`;
+      connection.query(query, (error, result) => {
+        if (error) {
+          reject(new Error(error));
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+  getAllNotAdmin: (id) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT * FROM user WHERE id = ${id} AND role != "admin"`,
+        (error, result) => {
+          if (error) {
+            reject(new Error(error));
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  },
+  getAll: (offset, limit, sort, sortBy, search) => {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM user WHERE role != "admin" AND (phone LIKE '%${search}%' or name LIKE '%${search}%') 
+      ORDER BY ${sortBy} ${sort} LIMIT ${offset}, ${limit}`;
+      connection.query(query, (error, result) => {
+        if (error) {
+          reject(new Error(error));
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+  getDBOTP: (email) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `SELECT OTP FROM user WHERE email = '${email}'`,
+        (error, result) => {
+          if (error) {
+            reject(new Error(error));
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  },
+  updateOTP: (email, OTP) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `UPDATE user SET OTP = '${OTP}' WHERE email = '${email}'`,
+        (error, result) => {
+          if (error) {
+            reject(new Error(error));
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  },
+  updateOTPToNull: (email) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        `UPDATE user SET OTP = NULL WHERE email = '${email}'`,
+        (error, result) => {
+          if (error) {
+            reject(new Error(error));
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  },
+  updatePassword: (passwordHash, email) => {
+    return new Promise((resolve, reject) => {
+      query = `UPDATE user SET password = '${passwordHash}' WHERE email = '${email}'`;
       connection.query(query, (error, result) => {
         if (error) {
           reject(new Error(error));

@@ -5,16 +5,16 @@ const Route = express.Router();
 const { validateUser, updatePhone } = require('../middleware/userValidator');
 const authentication = require('../middleware/authentication');
 const adminAuthor = require('../middleware/adminAuthor');
+
 const storage = multer.diskStorage({
   destination: (request, file, callback) => {
-    callback(null, '../public/images/user');
+    callback(null, './public');
   },
-  filename: (req, file, callback) => {
+  filename: (request, file, callback) => {
     callback(null, file.originalname);
   },
 });
-
-const upload = multer({
+const uploadUser = multer({
   storage,
 });
 
@@ -25,7 +25,17 @@ Route.post('/register', validateUser, Auth.register)
   .post('/updateLink_wa/:id', authentication, Auth.updateLink_wa)
   .post('/updateTTL/:id', authentication, Auth.updateTTL)
   .post('/updateGender/:id', authentication, Auth.updateGender)
-  .post('/updatePhoto/:id', upload.single('photo'), Auth.addUserPhoto)
-  .delete('/deleteUser/:id', adminAuthor, Auth.deleteUser);
+  .patch(
+    '/updatePhoto/:id',
+    authentication,
+    uploadUser.single('photo'),
+    Auth.uploadUser
+  )
+  .get('/getAllNotAdmin', Auth.getAllNotAdmin)
+  .get('/getAllNotAdminbyId/:id', Auth.getAllNotAdminbyId)
+  .delete('/deleteUser/:id', adminAuthor, Auth.deleteUser)
+  .post('/forgot-password', Auth.forgotPassword)
+  .patch('/update-password', Auth.updatePassword)
+  .patch('/profile-change-password', Auth.profileNewPassword);
 
 module.exports = Route;
